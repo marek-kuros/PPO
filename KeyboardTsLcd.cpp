@@ -1,18 +1,15 @@
 #include "KeyboardTsLcd.h"
 #include "Keyboard_Ts.h"
 
-#define INVERSION 3
-
 KeyboardTsLcd::KeyboardTsLcd(unsigned char _ucColumn)
 {
     pKeyboard = new Keyboard_Ts(_ucColumn);
     pLed = new Led_Lcd(_ucColumn);
-    pKeyboardTsLcd = new Led_Lcd(3);
 }
 
 void KeyboardTsLcd::eRead(){
     uint8_t ui8LedInvert;
-    switch (pKeyboard->eRead()) {
+    switch (pKeyboard->eRead()){
         case BUTTON_0:
             ui8LedInvert = 0;
             break;
@@ -36,12 +33,5 @@ void KeyboardTsLcd::eRead(){
             ui8LedInvert = 4;
             break;
         }
-
-        if(ui8LedInvert != 4){
-            pKeyboardTsLcd->On(INVERSION-ui8LedInvert);
-            pLed->On(ui8LedInvert);
-        }else{
-            pKeyboardTsLcd->On(ui8LedInvert);
-            pLed->On(ui8LedInvert);
-        }
+        pLed->On(ui8LedInvert);
 }
