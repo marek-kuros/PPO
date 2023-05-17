@@ -1,34 +1,32 @@
-#include "Keyboard_Ts.h"
+#include "Led_Lcd.h"
 
 #define X_SIZE_OF_BUTTON 80
 #define Y_SIZE_OF_BUTTON 80
 #define SIZE_OF_FRAME 1
 #define STARTING_POINT 0
-#define BUTTON_MULTIPY 80
+#define BUTTON_MULTIPY  80
+#define LED_NO 4
 
-Keyboard_Ts::Keyboard_Ts(uint8_t ui8ColumnIndexKeyboard){
-    ui8ColumnOffsetKeyboard = ui8ColumnIndexKeyboard;
-    Init(240, 320);
+Led_Lcd::Led_Lcd(uint8_t ui8ColumnIndexLed){
+    ui8ColumnOffsetLed = ui8ColumnIndexLed;
+    Init();
+    Clear(LCD_COLOR_BLACK);
+    SetFont(&Font24);
 }
 
-enum eButton Keyboard_Ts::eRead(){
-    uint16_t X, Y, TouchDetected;
-    eButton State, eSTATE[5] = {BUTTON_0, BUTTON_1, BUTTON_2, BUTTON_3, RELEASED};
-    GetState(&tTS_TouchPoint);
-    X = tTS_TouchPoint.X;
-    Y = tTS_TouchPoint.Y;
-    TouchDetected = tTS_TouchPoint.TouchDetected;
-   
-    if(TouchDetected && X >= X_SIZE_OF_BUTTON * (ui8ColumnOffsetKeyboard-1) &&
-        X < X_SIZE_OF_BUTTON * ui8ColumnOffsetKeyboard){
-        for (uint8_t ButtonIndex = 0; ButtonIndex < 4; ButtonIndex++){
-            if (Y >= Y_SIZE_OF_BUTTON * ButtonIndex && Y < Y_SIZE_OF_BUTTON * (ButtonIndex + 1)){
-                State = eSTATE[ButtonIndex];
-                return State;
-            }
-        }
+void Led_Lcd::On(uint8_t uIndexOfLed){
+    for(uint8_t uButtonIndex = 0; uButtonIndex < LED_NO; uButtonIndex++){
+        Draw(uButtonIndex, LCD_COLOR_BLUE);
     }
-    State = RELEASED;
-    return State;
+    Draw(uIndexOfLed, LCD_COLOR_GREEN);
 }
 
+void Led_Lcd::Draw(uint8_t uButtonIndex, uint32_t uiNextColour){     
+    SetTextColor(uiNextColour);
+    FillRect(STARTING_POINT + (ui8ColumnOffsetLed - 1)*X_SIZE_OF_BUTTON, SIZE_OF_FRAME + uButtonIndex*BUTTON_MULTIPY, X_SIZE_OF_BUTTON, Y_SIZE_OF_BUTTON);
+    SetTextColor(LCD_COLOR_GREEN);
+    DrawRect(STARTING_POINT + (ui8ColumnOffsetLed - 1)*X_SIZE_OF_BUTTON, uButtonIndex*BUTTON_MULTIPY, X_SIZE_OF_BUTTON, Y_SIZE_OF_BUTTON);
+    SetTextColor(LCD_COLOR_WHITE);
+    SetBackColor(LCD_COLOR_RED);
+    DisplayChar(STARTING_POINT + (ui8ColumnOffsetLed - 1)*X_SIZE_OF_BUTTON, SIZE_OF_FRAME + uButtonIndex*BUTTON_MULTIPY, '0' + uButtonIndex+1);
+}
