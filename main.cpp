@@ -1,14 +1,17 @@
-#include "mbed.h"
 #include "KeyboardTsLcd.h"
-#include "Led_Lcd.h"
-#include "Keyboard_Ts.h"
-#include "stm32f429i_discovery_lcd.h"
 
 int main()
 {
-    KeyboardTsLcd Keyboard(1);
+    KeyboardTsLcd Keyboard_1(1), Keyboard_2(3);
     while(1){
-        Keyboard.eRead();
+        uint32_t Invert;
+        Keyboard_1.eRead();
+        Invert = Keyboard_1.pKeyboard->eRead();
+        if(Invert == RELEASED){
+            Keyboard_2.pLed->On(Invert);
+        }else{
+            Keyboard_2.pLed->On(3-Invert);
+        }
         wait(0.1);
     }
 }
