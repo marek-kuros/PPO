@@ -1,17 +1,35 @@
 #include "KeyboardTsLcd.h"
+#include "Keyboard_Ts.h"
+#include "Led_Lcd.h"
 
 int main()
 {
-    KeyboardTsLcd Keyboard_1(1), Keyboard_2(3);
-    while(1){
-        uint32_t Invert;
-        Keyboard_1.eRead();
-        Invert = Keyboard_1.pKeyboard->eRead();
-        if(Invert == RELEASED){
-            Keyboard_2.pLed->On(Invert);
-        }else{
-            Keyboard_2.pLed->On(3-Invert);
-        }
-        wait(0.1);
+    Led_Lcd Led(3);
+    KeyboardTsLcd Keyboard(1);
+    while(1){  
+        Keyboard.eRead();
+        switch (Keyboard.eRead()){
+            case BUTTON_0:
+                Led.On(3);
+                break;
+
+            case BUTTON_1:
+                Led.On(2);
+                break;
+
+            case BUTTON_2:
+                Led.On(1);
+                break;
+
+            case BUTTON_3:
+                Led.On(0);
+                break;
+            case RELEASED:
+                Led.On(4);
+                break;
+
+            default:
+                break;
+            }
     }
 }
