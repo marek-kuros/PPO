@@ -5,11 +5,12 @@
 #include "Led_Lcd.h"
 
 class KeyboardTsLcd{
-    public:
+    private:
         Keyboard_Ts *pKeyboard;
         Led_Lcd *pLed;
+    public:
         KeyboardTsLcd(unsigned char);
-        void eRead();
+        eButton eRead();
 };
 
 #endif
